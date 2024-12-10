@@ -29,9 +29,13 @@ for (let y = 0; y < antennaField.length; y++) {
         coordinate: [x, y],
         frequency: antennaField[y][x],
       });
+
+      antinodeField[y][x] = '#';
     }
   }
 }
+
+console.log(antinodeField.map(r => r.join('')));
 
 for (let y = 0; y < antennaField.length; y++) {
   for (let x = 0; x < antennaField[0].length; x++) {
@@ -42,13 +46,32 @@ for (let y = 0; y < antennaField.length; y++) {
 
       matchingAntennas.forEach(matchingAntenna => {
         const difference = [matchingAntenna.coordinate[0] - x, matchingAntenna.coordinate[1] - y];
-        console.log(x, y, matchingAntenna.coordinate[0], matchingAntenna.coordinate[1], difference);
-        if (antennaField[y - difference[1]] && antennaField[y - difference[1]][x - difference[0]]) {
-          antinodeField[y - difference[1]][x - difference[0]] = '#'
+        let xChecker = matchingAntenna.coordinate[0];
+        let yChecker = matchingAntenna.coordinate[1];
+
+        while (xChecker >= 0 && xChecker <= antennaField[0].length) {
+          if (antinodeField[yChecker] && antinodeField[yChecker][xChecker]) {
+            antinodeField[yChecker][xChecker] = '#';
+          }
+          xChecker += difference[0];
+          yChecker += difference[1];
+        }
+
+        xChecker = matchingAntenna.coordinate[0];
+        yChecker = matchingAntenna.coordinate[1];
+
+        while (xChecker >= 0 && xChecker <= antennaField[0].length) {
+          if (antinodeField[yChecker] && antinodeField[yChecker][xChecker]) {
+            antinodeField[yChecker][xChecker] = '#';
+          }
+          xChecker -= difference[0];
+          yChecker -= difference[1];
         }
       });
     }
   }
 }
 
-console.log(antinodeField.flatMap(r => r).filter(c => c === '#').length);
+console.log(antinodeField.map(i => i.join('')));
+
+console.log('d', antinodeField.flatMap(r => r).filter(c => c === '#').length);
